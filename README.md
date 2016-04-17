@@ -1,4 +1,4 @@
-# Teste de Desenvolvimento de API Rest com Python.
+# Segundo Teste de Desenvolvimento de API Rest com Python.
 
 ## Dependências:
 
@@ -56,26 +56,58 @@ Crie a base de dados Mysql para o projeto e edit o arquivo prova2/api.py:
   	app.config['MYSQL_DATABASE_DB'] = 'prova2'
   	app.config['MYSQL_DATABASE_HOST'] = '127.0.0.1'
   
-Importe os dados, deixe o arquivo db.json na raiz do projeto:
-
-	python manage.py migrate
-	python manage.py loaddata db.json
+Importe os dados, deixe o arquivo dump db.sql na raiz do projeto.
 
 Agora apenas rode o projeto:
 
-	python manage.py runserver 0.0.0.0:8080
+	python api.py
 
-Para executar o caso de teste:
+Casos de teste:
 
-	python manage.py test person
+	### Pegando dados do Twitter
+	curl -X GET -H "Cache-Control: no-cache" -H "Postman-Token: 31487a2f-5347-9920-f242-e573322282a5" "http://127.0.0.1:5000/person/twitter/kanayamap"
+
+	### POST
+	
+	curl -X POST -H "Content-Type: application/json" -H "Cache-Control: no-cache" -H "Postman-Token: caef224f-47dd-9faa-6984-7818b298a537" -d '{
+  	"descricao": "",
+  	"foto": "https://pbs.twimg.com/profile_images/311595467/kanayama_normal.jpeg",
+  	"idioma": "en",
+  	"local": "Cravinhos, São Paulo",
+  	"nome": "Paulo Kanayama"
+	}' "http://127.0.0.1:5000/person/"
+	
+	### PUT
+	
+	PUT /person/1 HTTP/1.1
+	Host: 127.0.0.1:5000
+	Content-Type: application/json
+	Cache-Control: no-cache
+	Postman-Token: bbd34284-eb35-0439-0e43-2e721162edae
+
+	{
+	  "descricao": "Testando Updade",
+	  "foto": "https://pbs.twimg.com/profile_images/311595467/kanayama_normal.jpeg",
+	  "idioma": "en",
+	  "local": "Cravinhos, São Paulo",
+	  "nome": "Paulo Kanayama"
+	}
+	
+	### DELETE
+	
+	curl -X DELETE -H "Cache-Control: no-cache" -H "Postman-Token: 64f7e924-b1e8-5675-c013-b8b580581a08" "http://127.0.0.1:5000/person/4"
+	
+	### GET LIST
+	
+	curl -X GET -H "Cache-Control: no-cache" -H "Postman-Token: dcbc0791-3a3d-4468-30d2-702ea5e0dcd7" "http://127.0.0.1:5000/person/"
+	
+	### GET
+	
+	curl -X GET -H "Cache-Control: no-cache" -H "Postman-Token: e9b602e0-0f27-ac66-6f2c-cc311dcc9544" "http://127.0.0.1:5000/person/1"
 
 ### Considerações
 
-Para a criação utilizei o Django  1.9.2, Djago Rest 3.3.2, Facebook SDK, Requests 2.9.1, durante o desenvolvimento me deparei com umas dificuldades:
-
-	O Facebook removeu a propriedade username da API então utilizei a propriedade Link  (https://developers.facebook.com/docs/apps/upgrading#upgrading_v2_0_graph_api), a propriedade Gender então utilizei uma API que retorna o sexo de acordo com o primeiro nome (https://genderize.io/).
-
-Para testar a aplicação utilizei uma extensão do Google Chrome que é Postman, e também pela API do próprio Django Rest (http://localhost:8080/persons/).
+Para testar a aplicação utilizei uma extensão do Google Chrome que é Postman.
 
 
 Agradeço a oportunidade e espero ter atendido as espectativas.
