@@ -31,7 +31,7 @@ Eu particularmente sempre crio uma pasta para colocar o projeto então
 
 Clone o projeto:
 
-	git clone https://github.com/kanayamazappa/prova.git
+	git clone https://github.com/kanayamazappa/prova2.git
 	
 Retone na pasta da virtualenv e troque de contexto:
 
@@ -51,10 +51,10 @@ Observação no caso de Windows deixei o arquivo MySQL_python-1.2.5-cp27-none-wi
 
 Crie a base de dados Mysql para o projeto e edit o arquivo prova2/api.py:
 
-  app.config['MYSQL_DATABASE_USER'] = 'root'
-  app.config['MYSQL_DATABASE_PASSWORD'] = ''
-  app.config['MYSQL_DATABASE_DB'] = 'prova2'
-  app.config['MYSQL_DATABASE_HOST'] = '127.0.0.1'
+  	app.config['MYSQL_DATABASE_USER'] = 'root'
+  	app.config['MYSQL_DATABASE_PASSWORD'] = ''
+  	app.config['MYSQL_DATABASE_DB'] = 'prova2'
+  	app.config['MYSQL_DATABASE_HOST'] = '127.0.0.1'
   
 Importe os dados, deixe o arquivo db.json na raiz do projeto:
 
