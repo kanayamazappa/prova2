@@ -1,0 +1,235 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Segundo Teste de Desenvolvimento de API Rest com Python.</title>
+        <style type="text/css">
+        #frm-cadastro {
+            
+        }
+        #frm-cadastro label {
+            display: block;
+            margin: 0 0 15px 0;
+            width: 500px;
+        }
+        #frm-cadastro label span {
+            display: inline-block;
+            vertical-align: top;
+            width: 150px;
+        }
+        #frm-cadastro label input,
+        #frm-cadastro label textarea {
+            width: 300px;
+        }
+        </style>
+        <script type="text/javascript" src="jquery-1.12.3.min.js"></script>
+        <script>
+            
+            $(document).ready(function(){
+                refreshTable();
+                
+                $('#adicionar-cadastro').click(function(){
+                    limpa_form($('#frm-cadastro'));
+                    $('#frm-cadastro').show();
+                    return false;
+                });
+                
+                $('#frm-cadastro').submit(function(){
+                    var id = $('#id').val();
+                    var nome = $('#nome').val();
+                    var local = $('#local').val();
+                    var idioma = $('#idioma').val();
+                    var foto = $('#foto').val();
+                    var descricao = $('#descricao').val();
+                    
+                    if(nome == ''){
+                        alert('Preencha o nome corretamente.');
+                        return false;
+                    }
+                    
+                    if(id == ''){
+                        var settings = {
+                            "async": true,
+                            "crossDomain": true,
+                            "url": "http://127.0.0.1:5000/person/",
+                            "method": "POST",
+                            "headers": {
+                                "content-type": "application/json",
+                                "cache-control": "no-cache",
+                                "postman-token": "f62429d2-d2b6-12ad-1790-85ec2a82c84b"
+                            },
+                            "processData": false,
+                            "data": '{"descricao": "' + descricao + '","foto": "' + foto + '","idioma": "' + idioma + '","local": "' + local + '","nome": "' + nome + '"}'
+                        }
+                            
+                        $.ajax(settings).done(function (response) {
+                            alert(response.message);
+                            limpa_form($('#frm-cadastro'));
+                        }).fail(function(jqXHR, textStatus, errorThrown){
+                            alert('Não foi possível realizar a operação no momento, tente novamente mais tarde.');
+                        });
+                    } else {
+                        
+                    }
+                    $('#frm-cadastro').hide();
+                    refreshTable();
+                    return false;
+                });
+                
+                $('#get-twitter-cadastro').click(function(){
+                    
+                    var screen_name = $('#url_twitter_cadastro').val();
+                    
+                    if(screen_name != '') {
+                        
+                        try {
+                            screen_name = screen_name.split('/');
+                            screen_name = screen_name[screen_name.length - 1];
+                            screen_name = screen_name.replace('@', '');
+                            
+                            var settings = {
+                                "async": true,
+                                "crossDomain": true,
+                                "url": "http://127.0.0.1:5000/person/twitter/" + screen_name,
+                                "method": "GET",
+                                "headers": {
+                                    "cache-control": "no-cache",
+                                    //"postman-token": "27b86c8c-3583-3d48-1c92-3f4293bdc817"
+                                }
+                            }
+                            
+                            $.ajax(settings).done(function (response) {
+                                
+                                $('#nome').val(response.nome);
+                                $('#local').val(response.local);
+                                $('#idioma').val(response.idioma);
+                                $('#descricao').val(response.descricao);
+                                
+                                convertFileToDataURLviaFileReader(response.foto, function(base64encoded) {
+                                    $('#foto').val(base64encoded);
+                                    $('#preview').attr('src', base64encoded);
+                                })
+                            }).fail(function(jqXHR, textStatus, errorThrown){
+                                alert('Não foi possível realizar a operação no momento, tente novamente mais tarde.');
+                            });
+                        } catch(ex) {
+                            alert(ex);
+                        }
+                    } else {
+                        alert('Preencha o campo Url do Twitter');
+                        $('#url_twitter').focus();
+                    }
+                    return false;
+                });
+                
+                $('#aux_foto').on('change',function(){
+                    var file    = $('#aux_foto')[0].files[0];
+                    var reader  = new FileReader();
+                    
+                    reader.addEventListener("load", function () {
+                        $('#preview').attr('src', reader.result);
+                        $('#foto').val(reader.result);
+                    }, false);
+                    
+                    if (file) {
+                        reader.readAsDataURL(file);
+                    }
+                });
+            });
+            function refreshTable(){
+                var settings = {
+                    "async": true,
+                    "crossDomain": true,
+                    "url": "http://127.0.0.1:5000/person/",
+                    "method": "GET",
+                    "headers": {
+                        "cache-control": "no-cache",
+                        "postman-token": "0cab7a9b-0fb6-ce57-441e-ac40f69bbf4b"
+                        }
+                }
+                
+                $.ajax(settings).done(function (response) {
+                    $.each(response, function(key, item) {
+                        $('#table-cadastro tbody').append('<tr><td>' + item.nome + '</td><td>' + item.local + '</td><td>' + item.idioma + '</td><td><img src="' + item.foto + '" height="50px"></td><td>' + item.descricao + '</td><td><a href="#" data-id="' + item.id + '" class="editar-cadastro">Editar</a></td><td><a href="#" data-id="' + item.id + '" class="deletar-cadastro">Deletar</a></td></tr>');
+                    });
+                });
+                return false;   
+            }
+            
+            function convertImgToDataURLviaCanvas(url, callback, outputFormat){
+                var img = new Image();
+                img.crossOrigin = 'Anonymous';
+                img.onload = function(){
+                    var canvas = document.createElement('CANVAS');
+                    var ctx = canvas.getContext('2d');
+                    var dataURL;
+                    canvas.height = this.height;
+                    canvas.width = this.width;
+                    ctx.drawImage(this, 0, 0);
+                    dataURL = canvas.toDataURL(outputFormat);
+                    callback(dataURL);
+                    canvas = null; 
+                };
+                img.src = url;
+            }
+            
+            function convertFileToDataURLviaFileReader(url, callback){
+                var xhr = new XMLHttpRequest();
+                xhr.responseType = 'blob';
+                xhr.onload = function() {
+                    var reader  = new FileReader();
+                    reader.onloadend = function () {
+                        callback(reader.result);
+                    }
+                    reader.readAsDataURL(xhr.response);
+                };
+                xhr.open('GET', url);
+                xhr.send();
+            }
+            
+            function limpa_form(obj) {
+                $(obj).find('input[type=text], input[type=hidden], input[type=file], select, textarea').val('');
+                $(obj).find('input[type=checkbox]').removeAttr('checked');
+                $(obj).find('input[type=radio]').removeAttr('selected');
+                $(obj).find('#preview').attr('src', '');
+            }
+        </script>
+    </head>
+    <body>
+        <h1>Segundo Teste de Desenvolvimento de API Rest com Python.</h1>
+        <form id="frm-cadastro" style="display: none;">
+            <fieldset>
+                <legend id="legenda">Cadastro</legend>
+                <input type="hidden" name="id" id="id" value="">
+                <label><span>Nome:</span> <input type="text" name="nome" id="nome" value="" maxlength="150"></label>
+                <label><span>Local:</span> <input type="text" name="local" id="local" value="" placeholder="Ex: Cravinhos, São Paulo" maxlength="150"></label>
+                <label><span>Idioma:</span> <input type="text" name="idioma" id="idioma" value="" placeholder="Ex: pt-br, en, es" maxlength="10"></label>
+                <label>
+                    <span>Foto:</span> 
+                    <input type="file" id="aux_foto"/>
+                    <img id="preview" src="" height="100px" alt="Previsão">
+                    <input type="hidden" name="foto" id="foto" value="">
+                </label>
+                <label><span>Descrição:</span> <textarea name="descricao" id="descricao"></textarea></label>
+                <div>
+                    <label><span>URL do Twitter:</span> <input type="text" name="url_twitter_cadastro" id="url_twitter_cadastro" value="" placeholder="Ex: https://twitter.com/kanayamap" maxlength="150"></label>
+                    <button id="get-twitter-cadastro">Pegar dados do Twitter</button>
+                </div>
+                <input type="submit" name="enviar-cadastro" id="enviar-cadastro" value="Enviar">
+            </fieldset>
+        </form>
+        <table id="table-cadastro" border="1">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Local</th>
+                    <th>Idioma</th>
+                    <th>Foto</th>
+                    <th>Descrição</th>
+                    <th colspan="2">Ações <button id="adicionar-cadastro">+</button></th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </body>
+</html>

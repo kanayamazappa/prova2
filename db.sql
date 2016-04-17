@@ -28,9 +28,11 @@ CREATE TABLE `person` (
   `foto` varchar(150) DEFAULT NULL,
   `descricao` text,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
 /*Data for the table `person` */
+
+insert  into `person`(`id`,`nome`,`local`,`idioma`,`foto`,`descricao`) values (1,'Paulo Kanayama','Cravinhos, São Paulo','en','https://pbs.twimg.com/profile_images/311595467/kanayama_normal.jpeg','Testando Updade'),(2,'Paulo Kanayama','Cravinhos, São Paulo','en','https://pbs.twimg.com/profile_images/311595467/kanayama_normal.jpeg','');
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

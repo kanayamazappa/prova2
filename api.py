@@ -140,4 +140,4 @@ class GetPesonByTwitter(Resource):
 api.add_resource(GetPesonByTwitter, '/person/twitter/<string:_screen_name>')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)
