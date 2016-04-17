@@ -49,25 +49,25 @@ class PersonList(Resource):
         return data, 200
     
     def post(self):
-        #try:
-        args = self.reqparse.parse_args()
-        cursor = conn.cursor()
-        cursor.execute("INSERT INTO person(nome,local,idioma,foto,descricao) VALUES ('%s', '%s', '%s', '%s', '%s')" % (args['nome'], args['local'], args['idioma'], args['foto'], args['descricao']))
-        conn.commit()
-        return {"message": "Usuário inserido."}, 201
-        #except:
-        #    abort(400, message="Não foi possível incluir o usuário")
+        try:
+            args = self.reqparse.parse_args()
+            cursor = conn.cursor()
+            cursor.execute("INSERT INTO person(nome,local,idioma,foto,descricao) VALUES ('%s', '%s', '%s', '%s', '%s')" % (args['nome'], args['local'], args['idioma'], args['foto'], args['descricao']))
+            conn.commit()
+            return {"message": "Usuário inserido."}, 201
+        except:
+            abort(400, message="Não foi possível incluir o usuário")
 
 api.add_resource(PersonList, '/person/')
 
 class Person(Resource):
     def __init__(self):
         self.reqparse = reqparse.RequestParser()
-        self.reqparse.add_argument('nome', type=str, required=True, help='Nome do usuário inválido.', location='json')
-        self.reqparse.add_argument('local', type=str, default="", help='Localização do usuário inválida.', location='json')
-        self.reqparse.add_argument('idioma', type=str, default="", help='Idioma do usuário inválido.', location='json')
-        self.reqparse.add_argument('foto', type=str, default="", help='Foto do usuário inválida.', location='json')
-        self.reqparse.add_argument('descricao', type=str, default="", help='Descrição do usuário inválida.', location='json')
+        self.reqparse.add_argument('nome', required=True, help='Nome do usuário inválido.')
+        self.reqparse.add_argument('local', default="", help='Localização do usuário inválida.')
+        self.reqparse.add_argument('idioma', help='Idioma do usuário inválido.')
+        self.reqparse.add_argument('foto', help='Foto do usuário inválida.')
+        self.reqparse.add_argument('descricao', help='Descrição do usuário inválida.')
         super(Person, self).__init__()
 
     def get(self, id):
