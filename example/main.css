@@ -15,3 +15,9 @@
 #frm-cadastro label textarea {
     width: 300px;
 }
+
+#frm-cadastro div {
+    margin: 0 0 15px 0;
+    border: 1px solid black;
+    padding: 10px;
+}

@@ -8,6 +8,7 @@ $(document).ready(function(){
     
     $('#adicionar-cadastro').click(function(){
         limpa_form($('#frm-cadastro'));
+        $('#frm-cadastro legend').html('Cadastro');
         $('#frm-cadastro').show();
         return false;
     });
@@ -156,6 +157,7 @@ function refreshTable(){
         
         $('.editar-cadastro').click(function(){
             limpa_form($('#frm-cadastro'));
+            $('#frm-cadastro legend').html('Edição');
             var id = $(this).data('id');
             
             var settings = {
@@ -175,11 +177,8 @@ function refreshTable(){
                 $('#local').val(response.local);
                 $('#idioma').val(response.idioma);
                 $('#descricao').val(response.descricao);
-                
-                convertFileToDataURLviaFileReader(response.foto, function(base64encoded) {
-                    $('#foto').val(base64encoded);
-                    $('#preview').attr('src', base64encoded);
-                })
+                $('#foto').val(response.foto);
+                $('#preview').attr('src', response.foto);
             }).fail(function(jqXHR, textStatus, errorThrown){
                 alert('Não foi possível realizar a operação no momento, tente novamente mais tarde.');
             });
