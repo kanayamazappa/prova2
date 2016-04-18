@@ -105,6 +105,10 @@ Casos de teste:
 	
 	curl -X GET -H "Cache-Control: no-cache" -H "Postman-Token: e9b602e0-0f27-ac66-6f2c-cc311dcc9544" "http://127.0.0.1:5000/person/1"
 
+### Segunda parte da prova
+
+Fiz um html estatico pois estava sem mais tempo, que se encontra em anexo na pasta exemplo.
+
 ### Considerações
 
 Para testar a aplicação utilizei uma extensão do Google Chrome que é Postman.
