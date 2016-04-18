@@ -4,7 +4,7 @@
         <title>Segundo Teste de Desenvolvimento de API Rest com Python.</title>
         <style type="text/css">
         #frm-cadastro {
-            
+            width: 500px;
         }
         #frm-cadastro label {
             display: block;
@@ -26,6 +26,11 @@
             
             $(document).ready(function(){
                 refreshTable();
+                
+                $('#cancelar-cadastro').click(function(){
+                    $('#frm-cadastro').hide();
+                    return false;
+                });
                 
                 $('#adicionar-cadastro').click(function(){
                     limpa_form($('#frm-cadastro'));
@@ -68,7 +73,26 @@
                             alert('Não foi possível realizar a operação no momento, tente novamente mais tarde.');
                         });
                     } else {
-                        
+                        var settings = {
+                            "async": true,
+                            "crossDomain": true,
+                            "url": "http://127.0.0.1:5000/person/" + id,
+                            "method": "PUT",
+                            "headers": {
+                                "content-type": "application/json",
+                                "cache-control": "no-cache",
+                                "postman-token": "c38a5ed2-7646-4a17-0961-f53d873d0c2d"
+                            },
+                            "processData": false,
+                            "data": '{"descricao": "' + descricao + '","foto": "' + foto + '","idioma": "' + idioma + '","local": "' + local + '","nome": "' + nome + '"}'
+                        }
+                            
+                        $.ajax(settings).done(function (response) {
+                            alert(response.message);
+                            limpa_form($('#frm-cadastro'));
+                        }).fail(function(jqXHR, textStatus, errorThrown){
+                            alert('Não foi possível realizar a operação no momento, tente novamente mais tarde.');
+                        });
                     }
                     $('#frm-cadastro').hide();
                     refreshTable();
@@ -136,6 +160,10 @@
                 });
             });
             function refreshTable(){
+                $('.editar-cadastro').unbind();
+                $('.deletar-cadastro').unbind();
+                $('#table-cadastro tbody').html('');
+                
                 var settings = {
                     "async": true,
                     "crossDomain": true,
@@ -151,6 +179,65 @@
                     $.each(response, function(key, item) {
                         $('#table-cadastro tbody').append('<tr><td>' + item.nome + '</td><td>' + item.local + '</td><td>' + item.idioma + '</td><td><img src="' + item.foto + '" height="50px"></td><td>' + item.descricao + '</td><td><a href="#" data-id="' + item.id + '" class="editar-cadastro">Editar</a></td><td><a href="#" data-id="' + item.id + '" class="deletar-cadastro">Deletar</a></td></tr>');
                     });
+                    
+                    $('.editar-cadastro').click(function(){
+                        limpa_form($('#frm-cadastro'));
+                        var id = $(this).data('id');
+                        
+                        var settings = {
+                            "async": true,
+                            "crossDomain": true,
+                            "url": "http://127.0.0.1:5000/person/" + id,
+                            "method": "GET",
+                            "headers": {
+                                "cache-control": "no-cache",
+                                "postman-token": "fd9eca0b-1659-8fb2-3d56-2998ae8d1d63"
+                            }
+                        }
+                            
+                        $.ajax(settings).done(function (response) {
+                            $('#id').val(response.id);
+                            $('#nome').val(response.nome);
+                            $('#local').val(response.local);
+                            $('#idioma').val(response.idioma);
+                            $('#descricao').val(response.descricao);
+                            
+                            convertFileToDataURLviaFileReader(response.foto, function(base64encoded) {
+                                $('#foto').val(base64encoded);
+                                $('#preview').attr('src', base64encoded);
+                            })
+                        }).fail(function(jqXHR, textStatus, errorThrown){
+                            alert('Não foi possível realizar a operação no momento, tente novamente mais tarde.');
+                        });
+                        $('#frm-cadastro').show();
+                        return false;
+                    });
+                    
+                    $('.deletar-cadastro').click(function(){
+                        if(confirm("Deseja realmente excluir este registro?")){
+                            var id = $(this).data('id');
+                            
+                            var settings = {
+                                "async": true,
+                                "crossDomain": true,
+                                "url": "http://127.0.0.1:5000/person/" + id,
+                                "method": "DELETE",
+                                "headers": {
+                                    "cache-control": "no-cache",
+                                    "postman-token": "2ab142d1-c074-f58f-bfaa-8629a7f29afc"
+                                }
+                            }
+                                
+                            $.ajax(settings).done(function (response) {
+                                alert('Usuário deletado.');
+                            }).fail(function(jqXHR, textStatus, errorThrown){
+                                alert('Não foi possível realizar a operação no momento, tente novamente mais tarde.');
+                            });
+                            refreshTable();
+                        }
+                        return false;
+                    });
+                    
                 });
                 return false;   
             }
@@ -215,6 +302,7 @@
                     <button id="get-twitter-cadastro">Pegar dados do Twitter</button>
                 </div>
                 <input type="submit" name="enviar-cadastro" id="enviar-cadastro" value="Enviar">
+                <button id="cancelar-cadastro">Cancelar</button>
             </fieldset>
         </form>
         <table id="table-cadastro" border="1">
