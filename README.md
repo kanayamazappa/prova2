@@ -107,7 +107,7 @@ Casos de teste:
 
 ### Segunda parte da prova
 
-Fiz um html estatico pois estava sem mais tempo, que se encontra em anexo na pasta exemplo.
+Fiz um html estático pois estava sem mais tempo, que se encontra em anexo ao projeto na pasta exemplo.
 
 ### Considerações
 
