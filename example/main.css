@@ -1,0 +1,17 @@
+#frm-cadastro {
+    width: 500px;
+}
+#frm-cadastro label {
+    display: block;
+    margin: 0 0 15px 0;
+    width: 500px;
+}
+#frm-cadastro label span {
+    display: inline-block;
+    vertical-align: top;
+    width: 150px;
+}
+#frm-cadastro label input,
+#frm-cadastro label textarea {
+    width: 300px;
+}
